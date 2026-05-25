@@ -1,30 +1,27 @@
-import re
-def fold(code):
-    lines=code.split('\n')
+def strength_reduction(code):
+    lines=code.split("\n")
     res=[]
     for line in lines:
-        match=re.search(r'(\d+)\s*([\+\-\*/])\s*(\d+)',line)
-        if match:
-            a=int(match.group(1))
-            op=match.group(2)
-            b=int(match.group(3))
-            if op=='+':
-                val=a+b
-            elif op=='-':
-                val=a-b
-            elif op=='*':
-                val=a*b
+        if '=' in line and '*' in line:
+            l,r=line.split('=')
+            l=l.strip()
+            r=r.strip()
+            parts=r.split('*')
+            if len(parts)==2:
+                var=parts[0].strip()
+                num=parts[1].strip()
+                if num.isdigit():
+                    num=int(num)
+                    expr='+'.join([var]*num)
+                    res.append(f'{l} = {expr}')
             else:
-                val=a//b
-            line=re.sub(r'(\d+)\s*([\+\-\*/])\s*(\d+)',str(val),line)
-        res.append(line)
+                res.append(line)
+        else:
+            res.append(line)
     return '\n'.join(res)
-# INPUT (FIXED)
 code = """
-x = 2 + 3
-y = 4 * 5
-z = x + y
+for i in range(3):
+    y = i * 4
 """
-
 print("Original:\n", code)
-print("Folded:\n", fold(code))
+print("Optimized:\n", strength_reduction(code))

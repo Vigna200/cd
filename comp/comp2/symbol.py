@@ -17,7 +17,8 @@ def symbol_table():
                 if name in keywords:
                     table[name] = ("Keyword", keywords[name], "-")
                 else:
-                    table[name] = ("Identifier", "Unknown", mem)
+                    dtype = input("Enter datatype: ")
+                    table[name] = ("Identifier", dtype, mem)
                     mem += 4
                 print("Inserted")
         elif ch == '2':

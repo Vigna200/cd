@@ -1,0 +1,10 @@
+<assign>
+    <id>x</id>
+    <add>
+        <num>5</num>
+        <mul>
+            <num>3</num>
+            <num>2</num>
+        </mul>
+    </add>
+</assign>

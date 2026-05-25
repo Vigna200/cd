@@ -1,4 +1,4 @@
-from collections import defaultdict,deque
+from collections import defaultdict
 
 grammar={
 "E":[["T","E'"]],
@@ -62,35 +62,29 @@ def compute_follow():
 compute_first()
 compute_follow()
 
-grammar["S'"]=[["E"]]
+table={nt:{t:"" for t in terminals} for nt in non_terminals}
 
-def closure(items):
-    for A,prod,dot in list(items):
-        if dot<len(prod):
-            B=prod[dot]
-            if B in grammar:
-                for p in grammar[B]:
-                    items.add((B,tuple(p),0))
-    return items
+for head,prods in grammar.items():
+    for prod in prods:
 
-def goto(items,symbol):
-    moved=set()
+        first_set=FIRST[prod[0]]
 
-    for A,prod,dot in items:
-        if dot<len(prod) and prod[dot]==symbol:
-            moved.add((A,prod,dot+1))
+        for t in first_set-{"ε"}:
+            table[head][t]=head+" -> "+" ".join(prod)
 
-    return closure(moved)
+        if "ε" in first_set:
+            for t in FOLLOW[head]:
+                table[head][t]=head+" -> ε"
 
-I0=closure({("S'",tuple(["E"]),0)})
+print("\nLL(1) Parsing Table:\n")
 
-print("FIRST\n")
-for i in non_terminals:
-    print(i,FIRST[i])
+print("{:<8}".format("NT"),end="")
+for t in terminals:
+    print("{:<20}".format(t),end="")
+print()
 
-print("\nFOLLOW\n")
-for i in non_terminals:
-    print(i,FOLLOW[i])
-
-print("\nInitial State\n")
-print(I0)
+for nt in non_terminals:
+    print("{:<8}".format(nt),end="")
+    for t in terminals:
+        print("{:<20}".format(table[nt][t]),end="")
+    print()

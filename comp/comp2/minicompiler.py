@@ -8,7 +8,6 @@ def lexer(expr):
         tokens.append(tok)
     return tokens
 
-
 # Infix to Postfix
 def infix_to_postfix(tokens):
     prec={'+':1,'-':1,'*':2,'/':2}
