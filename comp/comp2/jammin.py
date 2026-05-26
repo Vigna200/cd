@@ -1,27 +1,23 @@
 def loop_jamming(code):
     lines = code.strip().split("\n")
     loops = {}
-    result = []
-    i = 0
-    while i < len(lines):
-        line = lines[i].strip()
+    
+    for line in lines:
         if line.startswith("for"):
-            loop = line
-            body = []
-            i += 1
-            while i < len(lines) and lines[i].startswith("    "):
-                body.append(lines[i])
-                i += 1
-            if loop not in loops:
-                loops[loop] = []
-            loops[loop].extend(body)
+            current_loop = line
+            loops[current_loop] = []
         else:
-            result.append(lines[i])
-            i += 1
+            loops[current_loop].append(line)
+
+    result = []
+
     for loop, body in loops.items():
         result.append(loop)
         result.extend(body)
+
     return "\n".join(result)
+
+
 code = """
 for i in range(3):
     print(i)
@@ -32,4 +28,5 @@ for i in range(3):
 for i in range(3):
     print(i+1)
 """
+
 print(loop_jamming(code))
